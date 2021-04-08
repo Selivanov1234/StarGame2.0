@@ -11,9 +11,9 @@ import ru.gamedev.base.BaseScreen;
 public class MenuScreen extends BaseScreen {
     private Texture img;
     private Vector2 pos;
-    private Vector2 v;
+    private Vector2 speed;
     private Vector2 target;
-    private Vector2 tmp;
+    private Vector2 temp;
 
 
     @Override
@@ -21,9 +21,9 @@ public class MenuScreen extends BaseScreen {
         super.show();
         img = new Texture("rocket.png");
         pos = new Vector2();
-        v = new Vector2();
+        speed = new Vector2();
         target = new Vector2();
-        tmp = new Vector2();
+        temp = new Vector2();
     }
 
     @Override
@@ -34,11 +34,11 @@ public class MenuScreen extends BaseScreen {
         batch.begin();
         batch.draw(img, pos.x, pos.y, 100,100);
         batch.end();
-        tmp.set(target);
-        if (tmp.sub(pos).len() <=v.len()) {
+        temp.set(target);
+        if (temp.sub(pos).len() <=speed.len()) {
             pos.set(target);
         }else {
-            pos.add(v);
+            pos.add(speed);
         }
     }
 
@@ -51,7 +51,7 @@ public class MenuScreen extends BaseScreen {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         target.set(screenX,Gdx.graphics.getHeight() - screenY);
-        v.set(target.cpy().sub(pos)).setLength(1f);
+        speed.set(target.cpy().sub(pos)).setLength(1f);
         return false;
     }
 
