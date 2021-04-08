@@ -1,76 +1,65 @@
 package ru.gamedev.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.gamedev.sprite.Background;
 import ru.gamedev.base.BaseScreen;
+import ru.gamedev.math.Rect;
+import ru.gamedev.sprite.Logo;
 
 public class MenuScreen extends BaseScreen {
-    private Texture img;
-    private Vector2 pos;
-    private Vector2 speed;
-    private Vector2 target;
-    private Vector2 temp;
+    private Texture bg;
+    private Background background;
+    private Texture logic;
+
+    private Logo logo;
 
 
     @Override
     public void show() {
         super.show();
-        img = new Texture("rocket.png");
-        pos = new Vector2();
-        speed = new Vector2();
-        target = new Vector2();
-        temp = new Vector2();
+        bg = new Texture("textures/bg.png");
+        background = new Background(bg);
+        logic = new Texture("badlogic.jpg");
+        logo = new Logo(logic);
+    }
+
+    @Override
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
+        background.resize(worldBounds);
+        logo.resize(worldBounds);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
+        update(delta);
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.7f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(img, pos.x, pos.y, 100,100);
+        background.draw(batch);
+        logo.draw(batch);
         batch.end();
-        temp.set(target);
-        if (temp.sub(pos).len() <=speed.len()) {
-            pos.set(target);
-        }else {
-            pos.add(speed);
-        }
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        img.dispose();
+        bg.dispose();
+        logic.dispose();
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        target.set(screenX,Gdx.graphics.getHeight() - screenY);
-        speed.set(target.cpy().sub(pos)).setLength(1f);
+    public boolean touchDown(Vector2 touch, int pointer, int button) {
+        logo.touchDown(touch, pointer,button);
         return false;
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
-        switch (keycode) {
-            case Input.Keys.UP:
-                pos.y += 10;
-                break;
-            case Input.Keys.DOWN:
-                pos.y -= 10;
-                break;
-            case Input.Keys.RIGHT:
-                pos.x += 10;
-                break;
-            case Input.Keys.LEFT:
-                pos.x -= 10;
-                break;
-        }
-        return false;
+    private void update(float delta) {
+        logo.update(delta);
     }
 }
